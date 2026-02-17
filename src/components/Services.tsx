@@ -3,7 +3,7 @@ import { useServicesCarousel } from "../hooks/useServicesCarousel";
 import ServiceCard from "./ui/CardServices";
 
 export default function Services() {
-  const trackRef = useServicesCarousel();
+  const { trackRef, next, prev } = useServicesCarousel();
 
   return (
     <section
@@ -33,7 +33,7 @@ export default function Services() {
           <div
             ref={trackRef}
             className="
-              flex gap-6
+              flex gap-4 
               touch-pan-x
               cursor-grab active:cursor-grabbing
               md:grid md:grid-cols-3 md:gap-10
@@ -44,17 +44,47 @@ export default function Services() {
               <article
                 key={service.title}
                 className="
-                min-w-[80%] sm:min-w-[65%]
-                md:min-w-0
-                bg-neutral-900/70
-                backdrop-blur-xl
-                rounded-2xl
-                will-change-transform
-              "
+                  min-w-[80%] sm:min-w-[65%]
+                  md:min-w-0
+                  bg-neutral-900/70
+                  backdrop-blur-xl
+                  rounded-2xl
+                  will-change-transform
+                  transition-all duration-300
+                "
               >
                 <ServiceCard service={service} />
               </article>
             ))}
+          </div>
+
+          {/* MOBILE CONTROLS */}
+          <div className="md:hidden flex justify-between items-center mt-6 px-2">
+            <button
+              onClick={prev}
+              className="
+                h-10 w-10 rounded-full
+                bg-white/10 backdrop-blur
+                flex items-center justify-center
+                text-white
+                active:scale-95
+              "
+            >
+              ←
+            </button>
+
+            <button
+              onClick={next}
+              className="
+                h-10 w-10 rounded-full
+                bg-white/10 backdrop-blur
+                flex items-center justify-center
+                text-white
+                active:scale-95
+              "
+            >
+              →
+            </button>
           </div>
         </div>
       </div>
