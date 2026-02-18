@@ -23,7 +23,7 @@ const Skills = () => {
     >
       <div className="max-w-6xl mx-auto px-5 md:px-16 w-full">
         {/* ================= HEADER ================= */}
-        <div className="mb-10 md:mb-14 reveal text-center md:text-left">
+        <div className="mb-10 md:mb-14 text-center md:text-left">
           <p className="relative inline-block mb-3">
             <span className="tracking-[0.4em] uppercase text-xs font-semibold text-white/70">
               Tech Stack
@@ -139,7 +139,7 @@ const Skills = () => {
           </div>
 
           {/* ================= CTA BUTTON ================= */}
-          {/* <div className="mt-10 flex justify-center md:justify-end">
+          <div className="mt-6 flex justify-center md:justify-end">
             <a
               href="/projects"
               className="
@@ -158,7 +158,7 @@ const Skills = () => {
                 →
               </span>
             </a>
-          </div> */}
+          </div>
         </div>
       </div>
     </section>

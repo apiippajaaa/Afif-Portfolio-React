@@ -234,21 +234,6 @@ body,
 }
 
 /* =========================================================
-       7. REVEAL ANIMATION
-       ========================================================= */
-
-/* .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-} */
-
-/* =========================================================
        8. AMBIENT GLOW ANIMATION
        ========================================================= */
 
@@ -276,189 +261,29 @@ body,
   height: 100vh; /* ⬅️ PENTING */
   scroll-snap-align: start;
 }
-/* =========================================================
-       10. APPLE-STYLE ACCENT LINE
-       ========================================================= */
 
-.apple-line {
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 2.5px;
-  overflow: hidden;
-}
-
-.apple-line::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  width: 60%;
-  opacity: 0.7;
-
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(96, 165, 250, 0.8),
-    transparent
-  );
-
-  animation: appleLineMove 5s ease-in-out infinite;
-}
-
-@keyframes appleLineMove {
-  0% {
-    transform: translateX(-120%);
-    opacity: 0;
-  }
-  30% {
-    opacity: 0.5;
-  }
-  70% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translateX(220%);
-    opacity: 0;
-  }
-}
-
-/* =========================================================== */
-/* =========================================================== */
-@keyframes scroll-dot {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 0);
-  }
-  25% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-    transform: translate(-50%, 14px);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, 18px);
-  }
-}
-
-.animate-scroll-dot {
-  animation: scroll-dot 1.8s ease-in-out infinite;
-}
-/* =========================================================== */
-:root {
-  --scroll-color: #ffffff;
-  --scroll-size-x: 22px;
-  --scroll-size-y: 36px;
-  --scroll-border-width: 2px;
-  --scroll-dot-size: 4px;
-  --scroll-animation-duration: 2.2s;
-}
-
-/* Container */
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  opacity: 0.6;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.scroll-indicator.is-hidden {
-  opacity: 0;
-  transform: translateX(-50%) translateY(10px);
-  pointer-events: none;
-}
-
-.scroll-indicator:hover {
-  opacity: 1;
-}
-
-/* Mouse shape */
-.scroll-indicator__mouse {
-  position: relative;
-  width: var(--scroll-size-x);
-  height: var(--scroll-size-y);
-  border: var(--scroll-border-width) solid var(--scroll-color);
-  border-radius: 999px;
-  box-sizing: border-box;
-}
-
-/* Dot animation */
-.scroll-indicator__mouse::before {
-  content: "";
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  width: var(--scroll-dot-size);
-  height: var(--scroll-dot-size);
-  background: var(--scroll-color);
-  border-radius: 50%;
-  transform: translateX(-50%);
-  animation: scroll-dot var(--scroll-animation-duration) infinite;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
-}
-
-/* Text */
-.scroll-indicator__text {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--scroll-color);
-  font-weight: 300;
-}
-
-/* Animation */
-@keyframes scroll-dot {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 0);
-  }
-  30% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, 14px);
-  }
-}
-
-/* Accessibility: reduce motion */
-@media (prefers-reduced-motion: reduce) {
-  .scroll-indicator__mouse::before {
-    animation: none;
-  }
-}
 .section-hero {
   position: relative;
 }
 
-.carousel-track {
+/* .carousel-track {
   transition: transform 0.4s ease;
-}
+} */
 
-/* ===== */
-.carousel-track > * {
-  transform: scale(0.92);
-  opacity: 0.6;
-}
-
-.carousel-track > *:hover {
-  transform: scale(0.96);
-  opacity: 0.85;
-}
-
-.carousel-track > *:has(:focus-visible),
-.carousel-track > *.is-active {
-  transform: scale(1);
-  opacity: 1;
+@keyframes scroll-dot-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
 }
