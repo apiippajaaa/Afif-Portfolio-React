@@ -1,0 +1,71 @@
+export const skillGroups = [
+  {
+    title: "Backend",
+    description: "Server-side, API & database technologies",
+    skills: [
+      { name: "Node.js", icon: "devicon-nodejs-plain" },
+      { name: "Express", icon: "devicon-express-original" },
+      { name: "Laravel", icon: "devicon-laravel-plain" },
+      { name: "PHP", icon: "devicon-php-plain" },
+      { name: "MySQL", icon: "devicon-mysql-plain" },
+      { name: "PostgreSQL", icon: "devicon-postgresql-plain" },
+      { name: "REST API", icon: "devicon-fastapi-plain" },
+      { name: "JWT Auth", icon: "devicon-json-plain" },
+      { name: "Firebase", icon: "devicon-firebase-plain" },
+      { name: "Linux", icon: "devicon-linux-plain" },
+      { name: "Nginx", icon: "devicon-nginx-original" },
+      { name: "Git", icon: "devicon-git-plain" },
+    ],
+  },
+
+  {
+    title: "Frontend",
+    description: "UI, interaction & modern frontend development",
+    skills: [
+      { name: "HTML5", icon: "devicon-html5-plain" },
+      { name: "CSS3", icon: "devicon-css3-plain" },
+      { name: "JavaScript", icon: "devicon-javascript-plain" },
+      { name: "TypeScript", icon: "devicon-typescript-plain" },
+      { name: "React", icon: "devicon-react-original" },
+      { name: "Next.js", icon: "devicon-nextjs-original" },
+      { name: "Tailwind", icon: "devicon-tailwindcss-plain" },
+      { name: "GSAP", icon: "devicon-javascript-plain" },
+      { name: "Framer Motion", icon: "devicon-react-original" },
+      { name: "Vite", icon: "devicon-vitejs-plain" },
+      { name: "Responsive Design", icon: "devicon-css3-plain" },
+      { name: "SPA Architecture", icon: "devicon-react-original" },
+    ],
+  },
+
+  {
+    title: "Design",
+    description: "UI/UX, visual design & digital assets",
+    skills: [
+      { name: "Figma", icon: "devicon-figma-plain" },
+      { name: "Adobe XD", icon: "devicon-xd-plain" },
+      { name: "Photoshop", icon: "devicon-photoshop-plain" },
+      { name: "Illustrator", icon: "devicon-illustrator-plain" },
+      { name: "UI Design", icon: "devicon-figma-plain" },
+      { name: "UX Flow", icon: "devicon-figma-plain" },
+      { name: "Wireframing", icon: "devicon-figma-plain" },
+      { name: "Design System", icon: "devicon-figma-plain" },
+      { name: "Branding", icon: "devicon-illustrator-plain" },
+      { name: "Social Media Design", icon: "devicon-photoshop-plain" },
+    ],
+  },
+
+  {
+    title: "Video",
+    description: "Video editing & motion graphics tools",
+    skills: [
+      { name: "Premiere Pro", icon: "devicon-premierepro-plain" },
+      { name: "After Effects", icon: "devicon-aftereffects-plain" },
+      { name: "CapCut", icon: "devicon-android-plain" },
+      { name: "Motion Graphics", icon: "devicon-aftereffects-plain" },
+      { name: "Color Grading", icon: "devicon-premierepro-plain" },
+      { name: "Short Form Editing", icon: "devicon-premierepro-plain" },
+      { name: "Transition Design", icon: "devicon-aftereffects-plain" },
+      { name: "Sound Sync", icon: "devicon-premierepro-plain" },
+    ],
+  },
+];

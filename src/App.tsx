@@ -3,7 +3,7 @@ import Homepage from "./pages/Homepage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Afif-Portfolio-React/">
       <Routes>
         <Route path="/" element={<Homepage />} />
       </Routes>

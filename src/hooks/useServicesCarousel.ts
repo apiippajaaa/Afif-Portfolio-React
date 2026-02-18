@@ -1,51 +1,37 @@
-import { useLayoutEffect, useRef, useCallback } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import Draggable from "gsap/dist/Draggable";
-
-gsap.registerPlugin(Draggable);
 
 export function useServicesCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const cardWidthRef = useRef(0);
-  const maxIndexRef = useRef(0);
-  const indexRef = useRef(0);
   const startOffsetRef = useRef(0);
   const cardsRef = useRef<HTMLElement[]>([]);
 
-  // ===============================
-  // UPDATE FOCUS (CENTER BASED)
-  // ===============================
-  const updateFocus = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
+  const indexRef = useRef(0);
 
+  // ✅ gunakan state untuk rendering
+  const [index, setIndex] = useState(0);
+  const [maxIndex, setMaxIndex] = useState(0);
+
+  // ===============================
+  // ACTIVE CARD STYLE
+  // ===============================
+  const setActiveCard = (activeIndex: number) => {
     const cards = cardsRef.current;
 
-    const currentX = gsap.getProperty(track, "x") as number;
-
-    // center viewport (fix karena sekarang ada offset)
-    const center =
-      -currentX + track.parentElement!.offsetWidth / 2;
-
-    cards.forEach((card) => {
-      const cardCenter =
-        card.offsetLeft + card.offsetWidth / 2;
-
-      const dist = Math.abs(center - cardCenter);
-
-      const scale = gsap.utils.clamp(0.9, 1, 1 - dist / 600);
-      const blur = gsap.utils.clamp(0, 6, dist / 120);
+    cards.forEach((card, i) => {
+      const active = i === activeIndex;
 
       gsap.to(card, {
-        scale,
-        opacity: scale,
-        filter: `blur(${blur}px)`,
-        duration: 0.25,
+        scale: active ? 1 : 0.92,
+        opacity: active ? 1 : 0.6,
+        duration: 0.35,
         ease: "power2.out",
+        overwrite: "auto",
       });
     });
-  }, []);
+  };
 
   // ===============================
   // INIT
@@ -59,127 +45,64 @@ export function useServicesCarousel() {
     const cards = Array.from(track.children) as HTMLElement[];
     cardsRef.current = cards;
 
-    const gap = 16; // gap-4 = 16px
+    const gap = 16;
     const cardWidth = cards[0].offsetWidth + gap;
-
     cardWidthRef.current = cardWidth;
-    maxIndexRef.current = cards.length - 1;
+
+    setMaxIndex(cards.length - 1);
 
     const containerWidth =
       track.parentElement!.offsetWidth;
 
     const singleCardWidth = cards[0].offsetWidth;
 
-    // OFFSET supaya card pertama di tengah
     const startOffset =
       (containerWidth - singleCardWidth) / 2;
 
     startOffsetRef.current = startOffset;
 
-    // ===============================
-    // SNAP FUNCTION
-    // ===============================
-    const snapToClosest = () => {
-      const currentX = gsap.getProperty(track, "x") as number;
+    gsap.set(track, { x: startOffset });
 
-      const rawIndex =
-        (startOffsetRef.current - currentX) /
-        cardWidthRef.current;
+    setActiveCard(0);
+    setIndex(0);
+  }, []);
 
-      const index = Math.round(rawIndex);
+  // ===============================
+  // MOVE
+  // ===============================
+  const moveTo = (newIndex: number) => {
+    const track = trackRef.current;
+    if (!track) return;
 
-      const snapX =
-        startOffsetRef.current -
-        index * cardWidthRef.current;
+    indexRef.current = newIndex;
+    setIndex(newIndex);
 
-      gsap.to(track, {
-        x: snapX,
-        duration: 0.5,
-        ease: "power3.out",
-        onUpdate: updateFocus,
-      });
+    const newX =
+      startOffsetRef.current -
+      newIndex * cardWidthRef.current;
 
-      indexRef.current = index;
-    };
-
-    // ===============================
-    // DRAGGABLE
-    // ===============================
-    Draggable.create(track, {
-      type: "x",
-      inertia: true,
-      bounds: {
-        minX:
-          startOffsetRef.current -
-          maxIndexRef.current * cardWidthRef.current,
-        maxX: startOffsetRef.current,
-      },
-      edgeResistance: 0.85,
-      dragResistance: 0.15,
-      onDrag: updateFocus,
-      onThrowUpdate: updateFocus,
-      onRelease: snapToClosest,
-      onThrowComplete: snapToClosest,
+    gsap.to(track, {
+      x: newX,
+      duration: 0.45,
+      ease: "power3.out",
     });
 
-    // set start posisi tengah
-    gsap.set(track, { x: startOffsetRef.current });
+    setActiveCard(newIndex);
+  };
 
-    updateFocus();
-
-    return () => {
-      Draggable.get(track)?.kill();
-    };
-  }, [updateFocus]);
-
-  // ===============================
-  // NEXT BUTTON
-  // ===============================
   const next = () => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const newIndex = Math.min(
-      indexRef.current + 1,
-      maxIndexRef.current
-    );
-
-    indexRef.current = newIndex;
-
-    const newX =
-      startOffsetRef.current -
-      newIndex * cardWidthRef.current;
-
-    gsap.to(track, {
-      x: newX,
-      duration: 0.5,
-      ease: "power3.out",
-      onUpdate: updateFocus,
-    });
+    moveTo(Math.min(indexRef.current + 1, maxIndex));
   };
 
-  // ===============================
-  // PREV BUTTON
-  // ===============================
   const prev = () => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const newIndex = Math.max(indexRef.current - 1, 0);
-
-    indexRef.current = newIndex;
-
-    const newX =
-      startOffsetRef.current -
-      newIndex * cardWidthRef.current;
-
-    gsap.to(track, {
-      x: newX,
-      duration: 0.5,
-      ease: "power3.out",
-      onUpdate: updateFocus,
-    });
+    moveTo(Math.max(indexRef.current - 1, 0));
   };
 
-  return { trackRef, next, prev };
+  return {
+    trackRef,
+    next,
+    prev,
+    index,
+    maxIndex,
+  };
 }
