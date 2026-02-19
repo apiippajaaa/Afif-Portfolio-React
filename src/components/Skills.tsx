@@ -19,7 +19,7 @@ const Skills = () => {
   return (
     <section
       id="skills"
-      className="snap-section min-h-screen flex items-center relative z-10 py-20"
+      className="snap-section flex items-center py-24 md:py-0"
     >
       <div className="max-w-6xl mx-auto px-5 md:px-16 w-full">
         {/* ================= HEADER ================= */}

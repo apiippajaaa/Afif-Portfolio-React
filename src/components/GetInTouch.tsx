@@ -3,7 +3,7 @@ const GetInTouch = () => {
     <>
       <section
         id="get-in-touch"
-        className="snap-section min-h-screen flex items-center relative z-10"
+        className="snap-section flex items-center py-24"
       >
         <div className="max-w-4xl mx-auto px-6 md:px-16 w-full text-center">
           <div className="mb-10 md:mb-14">

@@ -8,18 +8,8 @@ export default function Hero() {
   useGsapContext(heroRef, heroAnimation);
 
   return (
-    <section
-      ref={heroRef}
-      id="hero"
-      className="
-        snap-section
-        min-h-screen
-        relative
-        px-6
-      "
-    >
-      {/* CONTENT */}
-      <div className="relative z-20 min-h-screen flex items-center">
+    <section ref={heroRef} id="hero" className="snap-section relative px-6">
+      <div className="min-h-[calc(var(--vh)*100)] flex items-center">
         <div className="max-w-6xl mx-auto w-full">
           <div
             className="
