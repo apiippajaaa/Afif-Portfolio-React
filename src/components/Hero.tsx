@@ -1,41 +1,74 @@
-import { useRef } from "react";
-import { heroAnimation } from "../animations/hero.animation";
-import { useGsapContext } from "../hooks/useGsapContext";
+import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 
 export default function Hero() {
-  const heroRef = useRef<HTMLElement>(null);
+  const containerVariants: Variants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
 
-  useGsapContext(heroRef, heroAnimation);
+  const itemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 40,
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1], // smooth cubic-bezier
+      },
+    },
+  };
 
   return (
-    <section ref={heroRef} id="hero" className="snap-section relative px-6">
+    <section id="hero" className="snap-section relative px-6">
       <div className="min-h-[calc(var(--vh)*100)] flex items-center">
-        <div className="max-w-6xl mx-auto w-full">
-          <div
+        <div className="max-w-6xl mx-auto px-6 md:px-16 w-full">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
             className="
               max-w-3xl
               space-y-6 md:space-y-8
-
               flex flex-col
               items-center text-center
               md:items-start md:text-left
             "
           >
-            <span className="hero-item text-xs md:text-sm tracking-[0.25em] text-blue-400 uppercase">
+            <motion.span
+              variants={itemVariants}
+              className="text-xs md:text-sm tracking-[0.25em] text-blue-400 uppercase"
+            >
               Creative Engineer
-            </span>
+            </motion.span>
 
-            <h1 className="hero-item text-3xl sm:text-4xl md:text-6xl font-bold leading-tight">
+            <motion.h1
+              variants={itemVariants}
+              className="text-3xl sm:text-4xl md:text-6xl font-bold leading-tight"
+            >
               Nur Afif Misbahuddin
-            </h1>
+            </motion.h1>
 
-            <p className="hero-item text-neutral-400 text-base md:text-lg leading-relaxed max-w-xl">
+            <motion.p
+              variants={itemVariants}
+              className="text-neutral-400 text-base md:text-lg leading-relaxed max-w-xl"
+            >
               I build reliable, scalable systems and craft clean digital
               experiences. Focused on performance, maintainability, and modern
               backend architecture.
-            </p>
+            </motion.p>
 
-            <div className="hero-item flex gap-3 md:gap-4 pt-2 md:pt-4 flex-wrap justify-center md:justify-start">
+            <motion.div
+              variants={itemVariants}
+              className="flex gap-3 md:gap-4 pt-2 md:pt-4 flex-wrap justify-center md:justify-start"
+            >
               <a
                 href="#portfolio"
                 className="
@@ -63,14 +96,19 @@ export default function Hero() {
               >
                 Resume
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
 
       {/* SCROLL INDICATOR */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
-        <div className="flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        transition={{ delay: 1.2, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+      >
+        <div className="flex flex-col items-center gap-2 hover:opacity-100 transition">
           <div className="w-5 h-9 rounded-full border-2 border-white/70 flex justify-center pt-1">
             <div className="w-1 h-1 bg-white rounded-full animate-[scroll-dot-slide_2s_ease-in-out_infinite]" />
           </div>
@@ -79,7 +117,7 @@ export default function Hero() {
             Scroll
           </span>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

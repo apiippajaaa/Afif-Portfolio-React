@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import HomeBackground from "../animations/Background/starsBackground";
 import GetInTouch from "../components/GetInTouch";
-import Hero from "../components/Hero";
+// import Hero from "../components/Hero";
 import Services from "../components/Services";
 import Skills from "../components/Skills";
 
@@ -28,7 +28,7 @@ const Homepage = () => {
     <>
       <main className="snap-container">
         <HomeBackground />
-        <Hero />
+        {/* <Hero /> */}
 
         <Services />
         <Skills />

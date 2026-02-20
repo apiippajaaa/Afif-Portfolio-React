@@ -1,124 +1,112 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
+import { animate, useMotionValue } from "framer-motion";
 
 const MOBILE_MAX = 768;
 
-export function useServicesCarousel() {
+export function useServicesCarousel<T>(data: readonly T[]) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLElement[]>([]);
 
-  const cardWidthRef = useRef(0);
-  const startOffsetRef = useRef(0);
-  const indexRef = useRef(0);
+  const x = useMotionValue(0);
+  const scale = useMotionValue(1);
+  const opacity = useMotionValue(1);
+
+  const cardSize = useRef(0);
+  const centerOffset = useRef(0);
 
   const [index, setIndex] = useState(0);
-  const [maxIndex, setMaxIndex] = useState(0);
   const [isCarousel, setIsCarousel] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  // ===============================
-  // ACTIVE CARD STYLE
-  // ===============================
-  const setActiveCard = (activeIndex: number) => {
-    cardsRef.current.forEach((card, i) => {
-      gsap.to(card, {
-        scale: i === activeIndex ? 1 : 0.92,
-        opacity: i === activeIndex ? 1 : 0.6,
-        duration: 0.3,
-        overwrite: "auto",
-      });
-    });
-  };
+  const isFirst = index === 0;
+  const isLast = index === data.length - 1;
 
-  // ===============================
-  // INIT / REINIT
-  // ===============================
   useLayoutEffect(() => {
-    const init = () => {
-      const track = trackRef.current;
-      if (!track) return;
-
-      const isMobile = window.innerWidth < MOBILE_MAX;
-      setIsCarousel(isMobile);
-
-      // ================= GRID MODE =================
-      if (!isMobile) {
-        gsap.set(track, { clearProps: "all" });
-        cardsRef.current.forEach((c) =>
-          gsap.set(c, { clearProps: "all" })
-        );
-        return;
-      }
-
-      // ================= CAROUSEL MODE =================
-      const cards = Array.from(track.children) as HTMLElement[];
-      cardsRef.current = cards;
-
-      const gap = parseFloat(
-        getComputedStyle(track).gap || "16"
-      );
-
-      const cardWidth =
-        cards[0].getBoundingClientRect().width + gap;
-
-      const containerWidth =
-        track.parentElement!.getBoundingClientRect().width;
-
-      const startOffset =
-        (containerWidth - cards[0].offsetWidth) / 2;
-
-      cardWidthRef.current = cardWidth;
-      startOffsetRef.current = startOffset;
-
-      setMaxIndex(cards.length - 1);
-      indexRef.current = 0;
-      setIndex(0);
-
-      gsap.set(track, { x: startOffset });
-      setActiveCard(0);
-    };
-
-    init();
-    window.addEventListener("resize", init);
-    window.addEventListener("orientationchange", init);
-
-    return () => {
-      window.removeEventListener("resize", init);
-      window.removeEventListener("orientationchange", init);
-    };
-  }, []);
-
-  // ===============================
-  // MOVE
-  // ===============================
-  const moveTo = (newIndex: number) => {
-    if (!isCarousel) return;
-
     const track = trackRef.current;
     if (!track) return;
 
-    indexRef.current = newIndex;
-    setIndex(newIndex);
+    const parent = track.parentElement!;
+    const cards = Array.from(track.children) as HTMLElement[];
+    if (!cards.length) return;
 
-    gsap.to(track, {
-      x:
-        startOffsetRef.current -
-        newIndex * cardWidthRef.current,
-      duration: 0.45,
-      ease: "power3.out",
+    const setup = () => {
+      const mobile = window.innerWidth < MOBILE_MAX;
+      setIsCarousel(mobile);
+
+      if (!mobile) return;
+
+      const gap = parseFloat(getComputedStyle(track).gap || "16");
+      const cardWidth = cards[0].getBoundingClientRect().width;
+
+      cardSize.current = cardWidth + gap;
+      centerOffset.current =
+        parent.getBoundingClientRect().width / 2 -
+        cardWidth / 2;
+
+      // posisi awal → card 0 di tengah
+      x.set(centerOffset.current);
+      scale.set(1);
+      opacity.set(1);
+      setIndex(0);
+    };
+
+    setup();
+    const ro = new ResizeObserver(setup);
+    ro.observe(parent);
+
+    return () => ro.disconnect();
+  }, [x, scale, opacity]);
+
+  const goTo = (nextIndex: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+
+    animate(
+      x,
+      -nextIndex * cardSize.current + centerOffset.current,
+      {
+        type: "spring",
+        stiffness: 220,
+        damping: 30,
+        mass: 0.9,
+      }
+    );
+
+    // zoom HALUS, BERSAMAAN (bukan patah)
+    animate(scale, 0.97, { duration: 0.15 });
+    animate(opacity, 0.9, { duration: 0.15 });
+
+    animate(scale, 1, {
+      delay: 0.15,
+      type: "spring",
+      stiffness: 180,
+      damping: 24,
     });
+    animate(opacity, 1, { delay: 0.15, duration: 0.25 }).then(
+      () => setIsAnimating(false)
+    );
 
-    setActiveCard(newIndex);
+    setIndex(nextIndex);
   };
 
-  const next = () => moveTo(Math.min(indexRef.current + 1, maxIndex));
-  const prev = () => moveTo(Math.max(indexRef.current - 1, 0));
+  const next = () => {
+    if (!isCarousel) return;
+    goTo(Math.min(index + 1, data.length - 1));
+  };
+
+  const prev = () => {
+    if (!isCarousel) return;
+    goTo(Math.max(index - 1, 0));
+  };
 
   return {
     trackRef,
+    x,
+    motion: { scale, opacity },
+    index,
+    isFirst,
+    isLast,
+    isCarousel,
     next,
     prev,
-    index,
-    maxIndex,
-    isCarousel,
   };
 }
